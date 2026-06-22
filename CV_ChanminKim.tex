@@ -1,0 +1,1258 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% Simple LaTeX CV Template %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NOTE: If you find that it says                                     %%
+%%                                                                    %%
+%%                           1 of ??                                  %%
+%%                                                                    %%
+%% at the bottom of your first page, this means that the AUX file     %%
+%% was not available when you ran LaTeX on this source. Simply RERUN  %%
+%% LaTeX to get the ``??'' replaced with the number of the last page  %%
+%% of the document. The AUX file will be generated on the first run   %%
+%% of LaTeX and used on the second run to fill in all of the          %%
+%% references.                                                        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Document Setup %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Don't like 10pt? Try 11pt or 12pt
+\documentclass[10pt]{article}
+
+% The automated optical recognition software used to digitize resume
+% information works best with fonts that do not have serifs. This
+% command uses a sans serif font throughout. Uncomment both lines (or at
+% least the second) to restore a Roman font (i.e., a font with serifs).
+%\usepackage{times}
+%\renewcommand{\familydefault}{\sfdefault}
+
+% This is a helpful package that puts math inside length specifications
+\usepackage{calc}
+\usepackage{comment}
+
+% Simpler bibsection for CV sections
+% (thanks to natbib for inspiration)
+\makeatletter
+\newlength{\bibhang}
+\setlength{\bibhang}{1em} %1em}
+\newlength{\bibsep}
+ {\@listi \global\bibsep\itemsep \global\advance\bibsep by\parsep}
+\newenvironment{bibsection}%
+        {\begin{enumerate}{}{%
+%        {\begin{list}{}{%
+       \setlength{\leftmargin}{\bibhang}%
+       \setlength{\itemindent}{-\leftmargin}%
+       \setlength{\itemsep}{\bibsep}%
+       \setlength{\parsep}{\z@}%
+        \setlength{\partopsep}{0pt}%
+        \setlength{\topsep}{0pt}}}
+        {\end{enumerate}\vspace{-.6\baselineskip}}
+%        {\end{list}\vspace{-.6\baselineskip}}
+\makeatother
+
+% Layout: Puts the section titles on left side of page
+\reversemarginpar
+
+%
+%         PAPER SIZE, PAGE NUMBER, AND DOCUMENT LAYOUT NOTES:
+%
+% The next \usepackage line changes the layout for CV style section
+% headings as marginal notes. It also sets up the paper size as either
+% letter or A4. By default, letter was used. If A4 paper is desired,
+% comment out the letterpaper lines and uncomment the a4paper lines.
+%
+% As you can see, the margin widths and section title widths can be
+% easily adjusted.
+%
+% ALSO: Notice that the includefoot option can be commented OUT in order
+% to put the PAGE NUMBER *IN* the bottom margin. This will make the
+% effective text area larger.
+%
+% IF YOU WISH TO REMOVE THE ``of LASTPAGE'' next to each page number,
+% see the note about the +LP and -LP lines below. Comment out the +LP
+% and uncomment the -LP.
+%
+% IF YOU WISH TO REMOVE PAGE NUMBERS, be sure that the includefoot line
+% is uncommented and ALSO uncomment the \pagestyle{empty} a few lines
+% below.
+%
+
+%% Use these lines for letter-sized paper
+\usepackage[paper=letterpaper,
+            %includefoot, % Uncomment to put page number above margin
+            marginparwidth=1.2in,     % Length of section titles
+            marginparsep=.05in,       % Space between titles and text
+            margin=1in,               % 1 inch margins
+            includemp]{geometry}
+
+%% Use these lines for A4-sized paper
+%\usepackage[paper=a4paper,
+%            %includefoot, % Uncomment to put page number above margin
+%            marginparwidth=30.5mm,    % Length of section titles
+%            marginparsep=1.5mm,       % Space between titles and text
+%            margin=25mm,              % 25mm margins
+%            includemp]{geometry}
+
+%% More layout: Get rid of indenting throughout entire document
+\setlength{\parindent}{0in}
+
+\usepackage[shortlabels]{enumitem}
+
+%% Reference the last page in the page number
+%
+% NOTE: comment the +LP line and uncomment the -LP line to have page
+%       numbers without the ``of ##'' last page reference)
+%
+% NOTE: uncomment the \pagestyle{empty} line to get rid of all page
+%       numbers (make sure includefoot is commented out above)
+%
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}
+%\pagestyle{empty}      % Uncomment this to get rid of page numbers
+\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyfootoffset{\marginparsep+\marginparwidth}
+\newlength{\footpageshift}
+\setlength{\footpageshift}
+          {0.5\textwidth+0.5\marginparsep+0.5\marginparwidth-2in}
+\lfoot{\hspace{\footpageshift}%
+       \parbox{4in}{\, \hfill %
+                    \arabic{page} of \protect\pageref*{LastPage} % +LP
+%                    \arabic{page}                               % -LP
+                    \hfill \,}}
+
+% Finally, give us PDF bookmarks
+\usepackage{color,hyperref}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.3}
+\hypersetup{colorlinks,breaklinks,
+            linkcolor=darkblue,urlcolor=darkblue,
+            anchorcolor=darkblue,citecolor=darkblue}
+
+%%%%%%%%%%%%%%%%%%%%%%%% End Document Setup %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Helper Commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The title (name) with a horizontal rule under it
+% (optional argument typesets an object right-justified across from name
+%  as well)
+%
+% Usage: \makeheading{name}
+%        OR
+%        \makeheading[right_object]{name}
+%
+% Place at top of document. It should be the first thing.
+% If ``right_object'' is provided in the square-braced optional
+% argument, it will be right justified on the same line as ``name'' at
+% the top of the CV. For example:
+%
+%       \makeheading[\emph{Curriculum vitae}]{Your Name}
+%
+% will put an emphasized ``Curriculum vitae'' at the top of the document
+% as a title. Likewise, a picture could be included:
+%
+%   \makeheading[\includegraphics[height=1.5in]{my_picutre}]{Your Name}
+%
+% the picture will be flush right across from the name.
+\newcommand{\makeheading}[2][]%
+        {\hspace*{-\marginparsep minus \marginparwidth}%
+         \begin{minipage}[t]{\textwidth+\marginparwidth+\marginparsep}%
+             {\large \bfseries #2 \hfill #1}\\[-0.15\baselineskip]%
+                 \rule{\columnwidth}{1pt}%
+         \end{minipage}}
+
+% The section headings
+%
+% Usage: \section{section name}
+\renewcommand{\section}[1]{\pagebreak[3]%
+    \hyphenpenalty=10000%
+    \vspace{1.3\baselineskip}%
+    \phantomsection\addcontentsline{toc}{section}{#1}%
+    \noindent\llap{\scshape\smash{\parbox[t]{\marginparwidth}{\raggedright #1}}}%
+    \vspace{-\baselineskip}\par}
+
+% An itemize-style list with lots of space between items
+\newenvironment{outerlist}[1][\enskip\textbullet]%
+        {\begin{itemize}[#1,leftmargin=*]}{\end{itemize}%
+         \vspace{-.6\baselineskip}}
+
+% An environment IDENTICAL to outerlist that has better pre-list spacing
+% when used as the first thing in a \section
+\newenvironment{lonelist}[1][\enskip\textbullet]%
+        {\begin{list}{#1}{%
+        \setlength{\partopsep}{0pt}%
+        \setlength{\topsep}{0pt}}}
+        {\end{list}\vspace{-.6\baselineskip}}
+
+% An itemize-style list with little space between items
+\newenvironment{innerlist}[1][\enskip\textbullet]%
+        {\begin{itemize}[#1,leftmargin=*,parsep=0pt,itemsep=0pt,topsep=0pt,partopsep=0pt]}
+        {\end{itemize}}
+
+% An environment IDENTICAL to innerlist that has better pre-list spacing
+% when used as the first thing in a \section
+\newenvironment{loneinnerlist}[1][\enskip\textbullet]%
+        {\begin{itemize}[#1,leftmargin=*,parsep=0pt,itemsep=0pt,topsep=0pt,partopsep=0pt]}
+        {\end{itemize}\vspace{-.6\baselineskip}}
+
+% To add some paragraph space between lines.
+% This also tells LaTeX to preferably break a page on one of these gaps
+% if there is a needed pagebreak nearby.
+\newcommand{\blankline}{\quad\pagebreak[3]}
+\newcommand{\halfblankline}{\quad\vspace{-0.5\baselineskip}\pagebreak[3]}
+
+% Uses hyperref to link DOI
+\newcommand\doilink[1]{\href{http://dx.doi.org/#1}{#1}}
+\newcommand\doi[1]{doi:\doilink{#1}}
+
+% For \url{SOME_URL}, links SOME_URL to the url SOME_URL
+\providecommand*\url[1]{\href{#1}{#1}}
+% Same as above, but pretty-prints SOME_URL in teletype fixed-width font
+\renewcommand*\url[1]{\href{#1}{\texttt{#1}}}
+
+% For \email{ADDRESS}, links ADDRESS to the url mailto:ADDRESS
+\providecommand*\email[1]{\href{mailto:#1}{#1}}
+% Same as above, but pretty-prints ADDRESS in teletype fixed-width font
+%\renewcommand*\email[1]{\href{mailto:#1}{\texttt{#1}}}
+
+%\providecommand\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+%\providecommand\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%    \TeX}}
+\providecommand\BibTeX{{B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    \TeX}}
+\providecommand\Matlab{\textsc{Matlab}}
+
+%%%%%%%%%%%%%%%%%%%%%%%% End Helper Commands %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Begin CV Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\makeheading{Chanmin Kim}
+
+\section{Contact Information}
+
+% NOTE: Mind where the & separators and \\ breaks are in the following
+%       table.
+%
+% ALSO: \rcollength is the width of the right column of the table
+%       (adjust it to your liking; default is 1.85in).
+%
+\newlength{\rcollength}\setlength{\rcollength}{1.4in}%
+%
+\begin{tabular}[t]{@{}p{\textwidth-\rcollength}p{\rcollength}}
+%\href{http://www.cse.osu.edu/}%
+%     {Department of Statistics} & \\
+%\href{http://www.ufl.edu/}{University of Florida}
+25-2, Sungkyunkwan-ro, Jongno-gu & 02-760-0495 \\
+Seoul 03063, Korea     & \email{chanmin.kim@skku.edu}\\
+\end{tabular}
+
+%\section{Objective}
+
+%Insert text here if you want to
+%\begin{innerlist}
+%\item More information and auxiliary documents can be found at\\\url{http://www.tedpavlic.com/facjobsearch/}
+%\end{innerlist}
+
+\section{Research Interests}
+\begin{innerlist}
+\item[] \hspace{-0.5cm}Bayesian nonparametric methods and Machine learning
+\item[] \hspace{-0.5cm}Causal inference and Causal mechanism
+\item[] \hspace{-0.5cm}Policy Evaluation, Environmental statistics, and behavioral sciences
+\item[] \hspace{-0.5cm}Bayesian methodologies
+\end{innerlist}
+
+\section{Current Position}
+\href{https://shb.skku.edu/stat/}{\textbf{SungKyunKwan University}, Department of Statistics},
+Seoul, Korea
+\begin{innerlist}
+\item[] \textbf{Associate Professor} of Statistics (with tenure),
+        \href{}
+             \hfill{Sep 2023 - Current}
+        \end{innerlist}
+        \begin{innerlist}
+\item[] \textbf{Director} of Research Institute of Applied Statistics,
+        \href{}
+             \hfill{Mar 2024 - Current}
+        \end{innerlist}
+\begin{innerlist}
+\item[] \textbf{Assistant Professor} of Statistics,
+        \href{}
+             \hfill{Jan 2020 - Aug 2023}
+        \end{innerlist}
+%        \vspace{0.2cm}
+ %\href{https://www.bu.edu/sph/about/departments/biostatistics/faculty-staff/}{\textbf{Boston University}, Department of Biostatistics},
+%Boston
+%\begin{innerlist}
+%\item[] \textbf{Adjunct Assistant Professor} of Biostatistics,
+ %       \href{}
+  %           \hfill{Jan 2020 - Jun 2023}
+ %       \end{innerlist}
+
+\section{Education / Training}
+
+
+\href{http://www.hsph.harvard.edu}{\textbf{Harvard University}},  \href{https://www.hsph.harvard.edu/biostatistics/}{Department of Biostatistics}, 
+Boston, MA
+\begin{innerlist}
+
+\item[] Research Associate \& Postdoctoral Research Fellow
+             \hfill{July 2014 - Aug 2017}
+
+           \item[] Project: \emph{Developing Bayesian causal inference methods for evaluating air pollution regulatory policies.}
+
+
+                          \item[] Mentor:
+              \href{https://www.hsph.harvard.edu/corwin-zigler/}
+                   {Corwin M. Zigler, Ph.D. } 
+
+        \end{innerlist}
+
+\vspace{0.2cm}
+
+\href{http://www.ufl.edu}{\textbf{University of Florida}},
+Gainesville, FL
+\begin{innerlist}
+
+\item[] Ph.D.,
+        \href{http://www.stat.ufl.edu/}
+             {Statistics}
+             \hfill{Aug 2013}
+
+             \item[] Thesis: \emph{Bayesian methods for inference on the causal effects of mediation.}
+                     \item[] Advisor:
+              \href{http://www.sbs.utexas.edu/mjdaniels/people/}
+                   {Michael J. Daniels, Sc.D.} 
+         \end{innerlist}
+
+\vspace{0.2cm}
+
+\href{http://www.ufl.edu}{\textbf{Columbia University in the City of New York}},
+New York, NY
+\begin{innerlist}
+
+\item[] M.A.,
+        \href{http://www.stat.columbia.edu}
+             {Statistics}
+             \hfill{May 2008}
+ \end{innerlist}  
+
+\vspace{0.2cm}
+
+\href{http://www.sogang.ac.kr/english/}{\textbf{Sogang University}},
+Seoul, Korea
+\begin{innerlist}
+\item[] B.B.A., B.A.,
+        \href{http://hompi.sogang.ac.kr/history/eng/index.html}
+             {Business and History} (Double Major) \hfill{Feb 2006}
+        \item[] \emph{Magna Cum Laude} the second highest GPA in the department.
+        \end{innerlist}
+
+
+
+\section{Research and Professional Experience}
+Visiting Scholar \hfill {Jan 2026 - Jan 2027}
+\begin{innerlist}
+\item[] Division of Biostatistics, UC San Diego, San Diego CA\\
+\end{innerlist}
+
+
+Assistant Professor \hfill {Sep 2017 - Dec 2019}
+\begin{innerlist}
+\item[] Department of Biostatistics, Boston University, Boston, MA\\
+\end{innerlist}
+
+Adjunct Assistant Professor \hfill {Jan 2020 - Jun 2023}
+\begin{innerlist}
+\item[] Department of Biostatistics, Boston University, Boston, MA\\
+\end{innerlist}
+
+Advisory Committee \hfill {Jul 2023 - Oct 2023}
+\begin{innerlist}
+\item[] Korea Internet \& Security Agency (KISA), Naju, Korea\\
+\end{innerlist}
+
+
+Advisory Committee \hfill {Nov 2020 - Feb 2021}
+\begin{innerlist}
+\item[] Hyundai Motor Group, Seoul, Korea\\
+\end{innerlist}
+
+
+Postdoctoral Research Fellow \hfill {Aug 2013 - Jul 2014}
+\begin{innerlist}
+\item[] Department of Integrative Biology, The University of Texas, Austin\\
+        - Developed Bayesian nonparametric methods for causal mediation in various settings (single, multiple, or longitudinal mediators).\\
+        Mentor: Michael J. Daniels, Sc.D.
+\end{innerlist}
+
+\vspace{0.2cm}
+
+Research Assistant \hfill {Jan 2010 - Jul 2013}
+\begin{innerlist}
+\item[] Department of Statistics, University of Florida\\
+        - Causal mediation analysis in the TOURS project (weight management
+        trial) and the Rural LITE project.\\
+        Supervisor: Michael J. Daniels, Sc.D.
+\end{innerlist}
+
+\vspace{0.2cm}
+
+Research Assistant \hfill {Jan 2007 - Dec 2007}
+\begin{innerlist}
+
+\item[] Applied Statistics Center, Columbia University\\
+        Supervisor: Andrew Gelman, Ph.D.
+\end{innerlist}
+
+\vspace{0.2cm}
+
+Employee, Samsung Electronics, South Korea \hfill {Jan 2006 - May 2006}
+\begin{innerlist}
+    \item[] - Worked at the HR headquarters of the Tele-Communication
+      Business Division which is in charge of Samsung's cell phone business. 
+\end{innerlist}
+
+\vspace{0.2cm}
+
+Internship, Bearing Point Consulting formerly KPMG Korea \hfill {Jul 2004 - Aug 2004}
+\begin{innerlist}
+    \item[] - As a member of PMO, evaluated daily outputs for a project to construct a new banking system for Korean
+      Exchange Bank (KBE). Worked with 600 IT experts.
+\end{innerlist}
+
+\section{Awards}
+
+\textsc{Honors}
+\begin{innerlist}
+\item[] SKKU Research Excellence: {\bf Sin-Poom}(1st, 2025) / {\bf Sin-Poom}(1st, 2024)\\
+\item[] SKKU Teaching Excellence: {\bf Sin-Poom}(1st, 2025) / {\bf Sin-Poom}(1st, 2024)/{\bf Sin-Poom}(1st, 2023)/{\bf Myo-Poom}(2nd, 2022)\\
+\item[] Mitchell Prize, honorable mention ({\bf 2nd place}), ISBA \hfill Jun 2020\\
+- The Mitchell Prize is awarded in recognition of an ``outstanding paper'' that describes how a Bayesian analysis has solved an important applied problem. The Prize is jointly sponsored by the Section on Bayesian Statistical Science (SBSS) of the ASA, the International Society for Bayesian Analysis (ISBA), and the Mitchell Prize Founders’ Committee.\\
+\item[] ASA Biometrics Section Paper Award  \hfill Aug 2017\\
+- Invited to present the paper at the 2017 JSM\\
+\item[] Winner ({\bf 1st place}), 2013 IASC data analysis competition\hfill Aug 2013\\
+- Invited to present the result at the joint meeting of the IASC
+Satellite Conference for the 59th ISI WSC and the 8th Conference of
+the Asian regional section of the IASC, Seoul, Korea (22-23 August
+2013)\\ 
+\item[] Honorable Mention, NSF research day poster competition, UF \hfill Oct 2011 \\ 
+\item[] {\bf 3rd Place}, Human Consulting Group case competition, \hfill May 2003\\ NEMO
+  Partners, South Korea
+\end{innerlist}
+
+\halfblankline
+
+
+\textsc{Travel Awards}
+\begin{innerlist}
+\item[] Sackler Travel Award (granted by NSF) \hfill Mar 2015\\ for
+  the Sackler Colloquium Drawing Causal Inference from Big Data,
+  D.C. \\ 
+\item[] Graduate Student Council (GSC) at UF \hfill
+  May 2013
+\\for 2013 Atlantic
+  Causal Inference Conference, Boston, MA \\ 
+\item[] College of Liberal Arts and Sciences (CLAS) at UF \hfill May 2013\\for 2013 Atlantic
+  Causal Inference Conference, Boston, MA \\ 
+\item[] Boyd Harshbarger Travel Award (granted by NSF) \hfill Jun 2012\\ for SRCOS 2012 Summer Research
+  Conference, GA \\ 
+\item[] College of Liberal Arts and Sciences (CLAS) at UF \hfill May 2012\\ for
+  2012 Atlantic Causal Inference Conference, Baltimore, MD \\ 
+\item[] Centre de recherches math{\'e}matiques (CRM) at University of Montreal 
+  \hfill May 2011\\for Workshop on Causal Inference in Health
+  Research, Canada \\ 
+\item[] Graduate Student Council (GSC) at UF 
+  \hfill May 2011\\for Workshop on Causal Inference in Health
+  Research, Canada
+
+\end{innerlist}
+
+
+
+
+
+\section{Refereed Journal Publications}
+\textsc{\bf Publication in Statistical Methodology} \hfill ($^\dagger$ student mentee, $^\ddagger$ co-first authors)
+\smallskip
+\begin{innerlist}
+\item[] Bae, Y.$^\dagger$, {\bf Kim, C.}$^\ddagger$, Wang, F., Sun, Q., Lee, K., Bayesian Variable Selection for High-Dimensional Mediation Analysis: Application to Metabolomics Data in Epidemiological Studies, \textbf {\textit{Statistics in Medicine}}, 45(1-2), e70365, 2026.
+\item[]
+    \item[] Song, Y., Maurizio, F., {\bf Kim, C.}, Robert, Y., Gheorghe, D., Estimating Causal Treatment Effects in the Sequential Parallel Comparison Design (SPCD), \textbf {\textit{Statistics in Medicine}}, 44(25-27), e70319, 2025.
+\item[]
+\item[] Yoo, Y.$^\dagger$, {\bf Kim, C.}, bartcs: Bayesian Additive Regression Trees for Confounder Selection in R, \textbf {\textit{R journal}}, 17(2), 176-206, 2025.
+\item[]
+\item[] Park, J.$^\dagger$, {\bf Kim, C.}, Bayesian MINBM: Addressing Multiple Inflated Values in Discrete Data, \textbf{\textit{Communications for Statistical Applications and Methods}}, 2025(32), 723-740, 2025.
+\item[]
+\item[] {\bf Kim, C.}, Zigler, C., Bayesian nonparametric trees for principal causal effects, \textbf{\textit{Biometrics}}, 81(1), 2025.
+\item[]
+\item[] {\bf Kim, C.},  Li, Y., Xu, T., Liao, Z.,
+Bayesian nonparametric model for heterogeneous treatment effects with zero-inflated data, \textbf{\textit{Statistics in Medicine}}, 43(30), 5968-5982, 2024.
+\item[]
+\item[] Seo, J.$^\dagger$, {\bf Kim, C.}, Utilizing local likelihood in regression discontinuity design: Investigating the impact of ART eligibility on retention in clinical HIV care in South Africa, \textbf {\textit{Statistics in Medicine}}, 43(8), 2024.
+\item[]   
+\item[] Lee, K-J., {\bf Kim, C.}, Yoo, J., Lee, K., Multivariate probit linear mixed models for multivariate longitudinal binary data,  \textbf {\textit{Statistics in Medicine}}, 43(8), 2024.
+\item[]
+\item[] Lee, S.$^\dagger$, {\bf Kim, C.}, Dirichlet Process Mixture Models using Matrix-Generalized Half-$t$ Distribution, \textbf{\textit{Stat}},12(1), 1-13, 2023.
+\item[]
+    \item[] {\bf Kim, C.},  Tec, M., Zigler, C.,
+Bayesian Nonparametric Adjustment of Confounding, \textbf{\textit{Biometrics}}, 79(4), 3252-3265, 2023.
+\item[]
+\item[] Koo, D., {\bf Kim, C.}, Lee, K., A Bayesian Method for Multinomial Probit Model, \textbf{\textit{The Journal of the Korean Statistical Society}}, 52, 265-281, 2023.
+\item[]
+            \item[] Kwon, N.$^\dagger$, {\bf Kim, C.},
+Causal Effect of Urban Parks on Children’s Happiness, \textbf{\textit{The Korean Journal of Applied Statistics}}, 36(1), 63-83, 2023.
+\item[]
+            \item[] {\bf Kim, C.},
+Bayesian Additive Regression Trees in Spatial Data Analysis with Sparse Observations, \textbf{\textit{Journal of Statistical Computation and Simulation}}, 92(15), 3275-3300, 2022.
+\item[]
+            \item[] Park, S.$^\dagger$, {\bf Kim, C.}  
+Comparison of Tree-based Ensemble Models, \textbf{\textit{Communications for Statistical Applications and Methods}}, 29(5), 1-29, 2022.
+\item[]
+    \item[] Liu, X., {\bf Kim, C.}, Han, Z., Lim, P., Roychoudhury, S., Fava, M., Doros, G., 
+        Assessing treatment benefit in the presence of placebo response using the sequential parallel comparison design, \textbf {\textit{Statistics in Medicine}}, 41(12), 2166-2190, 2022.
+\item[]
+            \item[] Lee, K.J., {\bf Kim, C.}, Chen, R.B., Lee,K.,  
+Robust Probit Linear Mixed Models for Longitudinal Binary Data, \textbf {\textit{Biometrical Journal}}, 64(7), 1307-1324, 2022.
+\item[]
+    \item[] {\bf Kim, C.}, Lin, X., Nelson, K., 
+       Measuring Rater Bias in Diagnostic Tests with Ordinal Ratings,  \textbf {\textit{Statistics in Medicine}}, 40(17), 4014-4033, 2021.
+        \item[]
+     \item[] {\bf Kim, C.}, Henneman, L., Choirat, C. Zigler, C. M., 
+Health Effects of Power Plant Emissions through Ambient Air Quality, {\textit{elected as a top cited paper in Wiley 2020-2021},} \textbf {\textit{Journal of the Royal Statistical Society: Series A}},183(4), 1677-1703, 2020.
+\item[]
+    \item[] {\bf Kim, C.}, Daniels, M. J., Hogan,
+      J. W., Choirat, C., Zigler, C. M. 
+        Bayesian Methods for Multiple Mediators: Relating Principal Stratification and Causal Mediation in the Analysis of Power Plant Emission Controls, {\textit{awarded ASA 2017 Biometrics section travel award; and awarded an honorable mention for the Mitchell Prize 2019, ISBA}}, \textbf {\textit{The Annals of Applied Statistics}}, 13(3), 1927-1956, 2019.
+ \item[]
+          \item[] {\bf Kim, C.}, 
+        Deviance Information Criteria for Mixtures of Distributions, {\textbf{\textit{Communications in Statistics - Simulation and Computation}}}, 50(10), 2935-2948, 2021.
+        \item[]
+        \item[] Liu, Y., {\bf Kim, C.}, Wu, A. D., Gustafson, P., Zumbo, B. D.  Investigating the Performance of Propensity Score Approaches for Differential Item Functioning Analysis, \textbf {\textit{Journal of
+Modern Applied Statistical Methods}}, 18(1), 2-26, 2019. 
+        \item[]
+    \item[]{\bf Kim, C.}, Daniels, M. J., Li, Y., Milbury, K., Cohen, L.,
+A Bayesian Semiparametric Latent Variable Approach to Causal Mediation, \textbf {\textit{Statistics in Medicine}}, 37(7), 1149-1161, 2018. 
+\item[]
+    \item[] {\bf Kim, C.}, Daniels, M.J., Marcus, B., Roy, J., 
+        A framework for Bayesian nonparametric inference for causal effects of mediation, \textbf {\textit{ Biometrics}}, 73(2), 401-409, 2017.
+\item[]
+  \item[] Zigler, C. M., {\bf Kim, C.}, Choirat, C. Hansen, J. B., Wang, Y., Hund, L., Samet, J., King, G., Dominici, F., Causal Inference Methods for Estimating Long-Term Health Effects of Air Quality Regulations, \textbf {\textit{Health Effects Institute Research Report}}, 187, 5-49, 2016 (peer-reviewed).
+\item[]
+  \item[] Daniels, M. J., Roy, J., {\bf Kim, C.}, Hogan, J. W., Perri, M.,
+    Bayesian Inference for the Causal Effects of Mediation,
+    \textbf {\textit{ Biometrics}}, 68(4), 1028-1036, 2012. 
+\end{innerlist}
+
+\bigskip
+
+\textsc{\bf Collaborative Publications}
+\smallskip
+\begin{innerlist}
+\item[] Jang et al., Menopausal Stage Transitions and their Associations with Overall and Individual Sleep Quality in Middle-aged Korean Women, \textbf{\textit{Journal of Affective Disorders}}, 368(1), 82-89, 2025.
+\item[]
+\item[] Park et al., Overactive bladder and cognitive impairment in middle-aged women: a cross-sectional study, \textbf {\textit{Maturitas}}, 187, 108042, 2024.
+\item[]
+    \item[] Choi et al., 
+Early-onset vasomotor symptoms and the development of depressive symptoms among premenopausal women, \textbf{\textit{Journal of Affective Disorders}}, 354(1), 376-384, 2024.
+\item[]
+\item[] Cheong et al., Human papillomavirus infection and
+cardiovascular mortality: a cohort study, \textbf {\textit{European Heart Journal}}, 45(12), 1072-1082, 2024.
+\item[]
+\item[] Kim, Y. et al., Serum 25-hydroxyvitamin D levels and the risk of early-onset colorectal cancer, \textbf {\textit{Gastroenterology}}, 165(4) 920-931,2023.
+\item[]
+\item[] Nguyen, D., Levy, J., {\bf Kim, C.}, Lane, K., Simon, M., Hart, J., Whitsel, E., VoPham, T., Malwitz, A., Pters, J., Characterizing temporal trends in populations exposed to aircraft noise around U.S. airports: 1995-2015, to appear in \textbf {\textit{Journal Of Exposure Science And Environmental Epidemiology}}, 2023+.
+\item[]
+\item[] Cho, Y., Chang, Y., Ryu, S., {\bf Kim, C.}, Wild, S., Byrne, C., History of gestational diabetes and incident nonalcoholic fatty liver disease: The Kangbuk Samsung Health Study, \textbf {\textit{American Journal of Gastroenterology}}, 118(11) 1980-1988, 2023.
+\item[]
+  \item[] Peer, K., Adams W. G., Legler, A., Sandel, M., Levy, J., Boynton-Jarrett, R.,  {\bf Kim, C.}, Leibler, J. H., Fabian, M. P., Developing and evaluating a pediatric asthma severity computable phenotype derived from electronic health records, \textbf {\textit{The Journal of Allergy and Clinical Immunology}}, 147(6), 2162-2170, 2021.
+\item[]
+        \item[] Nguyen, M., Feeney, T., {\bf Kim, C.}, Drake, T., Mitchell, S., Bednarczyk, M., Sanchez, S.,  
+Patient-Level Factors Influencing Palliative Care Consultation at a Safety-Net Urban Hospital,  \textbf {\textit{American Journal of Hospice and Palliative Medicine}}, 38(11), 1299-1307, 2021.
+\item[]
+  \item[] Liu, Y., Beliveau, A., Besche, H.,  Wu, A., Zhang, X.,  Stefan, M., Gutlerner, J., {\bf Kim, C.},
+Bayesian Mixed Effects Model and Data Visualization for Understanding Item Response Time and Response Order in Open Online Assessment, \textbf {\textit{Frontiers in Education, section Assessment, Testing and Applied Measurement}}, 5, 274, 2021.
+\item[]
+        \item[] Nguyen, M., Feeney, T., {\bf Kim, C.}, Drake, T., Mitchell, S., Bednarczyk, M., Sanchez, S.,  
+Differential Utilization of Palliative Care Consultation between Medical and Surgical Services,  \textbf {\textit{American Journal of Hospice and Palliative Medicine}}, 37(4), 250-257, 2020.
+\item[]
+\item[] Mahalingaiah, S., Lane, K.J., {\bf Kim, C.}, Cheng, J., Hart, J., Impacts of Air Pollution on Gynecologic Disease: Infertility, Menstrual Irregularity, Uterine Fibroids, and Endometriosis: a Systematic Review and Commentary, \textbf {\textit{Current Epidemiology Reports}}, 5(3), 197-204, 2018.
+        \item[]
+\item[] Zhang, Z., Zheng, C., {\bf Kim, C.}, Van Poucke, S., Lin, S., Lan, P., Causal Mediation Analysis in the Context of Clinical Research, \textbf {\textit{Annals of Translational Medicine}}, 4(21), 1-20, 2016.
+        \item[]
+  \item[] Perri, M., Limacher, M., von Castel-Roberts, K., Daniels, M., Durning, P., Janicke, D.,
+Bobroff, L., Radcliff, T., Milsom, V., {\bf Kim, C.}, Martin, A., 
+    Comparative Effectiveness of Three Doses of Weight
+      Loss Counseling: Two-Year Findings from the Rural LITE Trial,
+    \textbf {\textit{ Obesity}}, 22, 2293-2300, 2014.
+    \item[]
+\end{innerlist}
+\bigskip
+
+\textsc{\bf Manuscripts Submitted or Under Revision}\hfill ($^\dagger$ denotes student mentee)
+\smallskip
+\begin{innerlist} 
+    \item[] {\bf Kim, C.}, Kim, H.$^\dagger$,  Bayesian Decision Trees for Confounder Selection in Mediation Analysis, submitted.
+\item[]
+  \item[] Peer, K., Adams W. G., Legler, A., Sandel, M., Levy, J., Boynton-Jarrett, R.,  {\bf Kim, C.}, Leibler, J. H., Fabian, M. P., Beyond a reductionist approach to residential mobility definitions in the health literature: opportunities and challenges using electronic health record address data, submitted.
+        \item[]
+    \item[] {\bf Kim, C.}, Zigler, C. M., Daniels, M. J., Choirat, C.,  Roy, J. A., 
+        Bayesian Longitudinal Causal Inference in the Analysis of the Public Health Impact of Pollutant Emissions [\href{http://arxiv.org/abs/1901.00908}{arXiv}].
+        \item[]
+            \item[] Cummiskey, K., {\bf Kim, C.}, Choirat, C., Schwartz, J., Zigler, C.  
+A Source-Oriented Approach to Coal Combustion PM$_{2.5}$ Health Effects [\href{https://arxiv.org/abs/1902.09703}{arXiv}], under revision.
+\item[]
+\end{innerlist}
+
+\section{Papers in Preparation}
+\begin{innerlist}
+    \item[]{\bf Kim, C.}, Hogan, J. W., Marcus, B., Daniels, M. J., 
+A Framework for Causal Inference for Multiple Mediators, In preparation (draft available upon request).
+\item[]
+    \item[] {\bf Kim, C.}, Nelson, K.,
+Enhanced Method for Measuring Rater Bias in Diagnostic Tests with Ordinal Ratings, In preparation.
+\item[]
+\item[] Liu, X., Han, Z., {\bf Kim, C.}, Doros, G., Assessing treatment effect for the sequential parallel comparison design via stratum-specific estimands when a non-responder criterion is not present, In preparation.
+
+\end{innerlist}
+
+
+\medskip
+
+
+\section{Package / Software}
+\begin{innerlist}
+\item[] {\bf BNPMediation}, an R package. Implements Bayesian nonparametric methods to estimate the causal effects of mediation. Available in CRAN.
+\item[]
+\item[] {\bf BayesODT}, an R package. Implements Bayesian hierarchical model to measure rater bias for ordinal classification processes. Available in \href{https://lit777.github.io/BayesODT.html}{lit777.github.io}.
+\end{innerlist}
+
+\medskip
+
+
+
+
+
+
+
+\section{Presentations}
+\textsc{Invited Talks}
+\smallskip
+\begin{innerlist}
+\item[] The 8th Pacific Causal Inference Conference (PCIC), \hfill Jul 2026\\
+\item[] Division of Biostatistics, University of California San Diego, \hfill April 2026\\
+\item[] Department of Statistics, Sookmyung Women's University, \hfill Nov 2025\\
+\item[] The 7th Pacific Causal Inference Conference (PCIC), \hfill Jul 2025\\
+\item[] EAC-ISBA Conference 2025, \hfill Jul 2025\\
+\item[] 17th International Conference of the ERCIM WG on CMStatistics,  \hfill Dec 2024\\
+\item[] ISBA World Meeting 2024, Venice, Italy (cancelled due to illness), \hfill Jul 2024\\
+\item[] The Institute for Mathematical Statistics – Asia-Pacific Rim Meeting(IMS-APRM 2024), \hfill Jan 2024\\ 
+\item[] 16th International Conference of the ERCIM WG on CMStatistics, \hfill Dec 2023\\
+\item[] IASC-LARS Data Science Conference in Chile, \hfill Nov 2023\\
+\item[] Department of Statistics, Seoul National University, \hfill Oct 2023\\
+\item[] 25th International Conference on Computational Statistics (COMPSTAT2023), \hfill Aug 2023\\
+\item[] 6th International Conference on Econometrics and Statistics (EcoSta), \hfill Jul 2023\\
+\item[] 15th International Conference of the ERCIM WG on CMStatistics, \hfill Dec 2022\\
+\item[] Invited Seminar on Causality, Data Science PLUS, \hfill Nov 2022 \\
+\item[] Fall Conference, The Korean Data \& Information Science Society, \hfill Nov 2022\\
+\item[] Data Science, Statistics \& Visualisation (DSSV) 2022, IASC-ISI, Taiwan \hfill Jun 2022\\
+\item[] Invited Section for Bayesian Statistics, The Korean Statistical Society \hfill Jun 2022\\
+\item[] Department of Statistics, Yonsei University, South Korea\hfill Dec 2021\\
+\item[] Department of Statistics, Korea University, South Korea\hfill Nov 2021\\
+\item[] Seminar on Causal Mediation Analysis, National Evidence-based Healthcare Collaborating Agency, \hfill Aug 2021\\
+\item[] 10th Bernoulli-IMS World Congress in Probability and Statistics, Seoul, Korea (Virtual), \hfill Jul 2021\\
+\item[] 63rd ISI World Statistics Congress, Hague (Virtual), \hfill Jul 2021\\
+\item[] Seminar on Social Science Methods, Center of Politics and Communication, Seoul National University, \hfill Jun 2021\\
+\item[] 4th International Conference on Econometrics and Statistics (EcoSta 2021), Hong Kong (Virtual), \hfill Jun 2021\\
+\item[] Working Group on Causal Inference and Machine Learning, Harvard University, \hfill May 2021\\
+\item[] Spring Conference, The Korean Data \& Information Science Society, \hfill May 2021\\
+\item[] Invited Section for Bayesian Statistics, The Korean Statistical Society, \hfill Dec 2020\\
+\item[] Department of Statistics, SungKyunKwan University, South Korea
+  \hfill Oct 2020 \\
+\item[] Department of Statistics, Ewha University, South Korea \hfill Aug 2020\\
+\item[] 4th International Conference on Econometrics and Statistics, Seoul, Korea, \hfill Jul 2020 (postponed)\\
+\item[] Bayesian Causal Inference Workshop, Ohio State University, OH (Cancelled) \hfill Jun 2019\\
+%-{\it Health Effects of Power Plant Emissions through Ambient Air Quality}\\
+\item[] Atlantic Causal Inference Conference, McGill University, Canada \hfill May 2019\\
+%-{\it Health Effects of Power Plant Emissions through Ambient Air Quality}\\
+\item[] Institute for Computational and Experimental Research in Mathematics, Brown University, RI \hfill Jan 2019\\
+%-{\it Bayesian Methods for Multiple Mediators: Principal Stratification and Causal Mediation Analysis}\\
+\item[] Graduate School of Future Strategy, KAIST, Daejeon, Korea \hfill Aug 2018\\
+%-{\it Bayesian Methods for Causal Mediation: Causal Inference in the Analysis of Power Plant Emission Control Policies}\\
+\item[] 2018 Joint Statistical Meeting, Vancouver, Canada \hfill Aug 2018\\
+%-{\it Bayesian longitudinal causal inference in the analysis of the public health impact of air pollution}\\
+\item[] The 3rd ISBA-EAC Conference , Seoul, Korea \hfill Jul 2018\\
+%-{\it Bayesian longitudinal causal inference in the analysis of the public health impact of air pollution}\\
+\item[] 2018 ICSA China Conference with the Focus on Data Science, Qingdao, Shangdong, China \hfill Jul 2018\\
+%-{\it Bayesian nonparametric causal inference methods for health outcomes}\\
+\item[] 2018 IISA International Conference on Statistics, Gainesville, FL
+  \hfill May 2018\\
+%  -{\it Bayesian longitudinal causal inference in the analysis of the public health impact of air pollution}\\
+\item[] Statistics and Probability Seminar Series, Boston University, MA
+  \hfill Apr 2018\\
+%  -{\it Bayesian Methods for Multiple Intermediate Variables: Principal Stratification and Causal Mediation Analysis}\\
+\item[] Biostatistics Student Association (BSA) Seminar, Boston University, MA \hfill Nov 2017\\
+%-{\it A Bayesian Semiparametric Latent Variable Approach to Causal Inference}\\
+\item[] Global Health Research Seminar Series, Boston University, MA \hfill Oct 2017\\
+%-{\it Bayesian methods for Causal Inference and Mediation Analysis}\\
+\item[] Environmental Statistics Seminar, Harvard University, MA
+  \hfill May 2017\\
+%  -{\it Public Health Impact of Pollutant Emissions}\\
+\item[] The 31st New England Statistics Symposium, Univ. of Connecticut, CT
+  \hfill Apr 2017\\
+%  -{\it Public Health Impact of Pollutant Emissions}\\
+\item[] Department of Biostatistics, Boston University, MA
+  \hfill Feb 2017 \\
+%-{\it Bayesian Methods for Causal Mediation Analysis}\\ 
+\item[] Department of Biostatistics and Bioinformatics, Duke University, NC
+  \hfill Jan 2017 \\
+%-{\it Bayesian Methods for Causal Mediation Analysis}\\ 
+\item[] Department of Biostatistics, Indiana University, Indianapolis, IN
+  \hfill Jan 2017 \\
+%-{\it Bayesian Methods for Causal Mediation Analysis} \\ 
+\item[] Div. of Sleep and Circadian Disorders, Brigham and Women's Hospital
+  \hfill Nov 2016 \\
+%-{\it Bayesian Methods for Causal Mediation Analysis} \\ 
+\item[] P01 Retreat, Harvard University
+  \hfill Oct 2016 \\
+%-{\it Bayesian Latent Mediation Model}\\ 
+\item[] Department of Statistics, SungKyunKwan University, South Korea
+  \hfill Apr 2016 \\
+%-{\it Bayesian Methods for Multiple Intermediate Variables: Principal Stratification and Causal Mediation Analysis}\\ 
+\item[] Environmental Statistics Seminar at Harvard Biostatistics
+  \hfill Sep 2015\\
+ % -{\it Bayesian Methods for Multiple Mediators: Principal Stratification and Causal Mediation Analysis of Power Plant Emission Controls}\\
+\item[] 2015 Atlantic Causal Inference Conference, Philadelphia, PA
+  \hfill May 2015 \\
+%-{\it A Bayesian Approach to the Estimating Causal Effect of Air Quality Regulations with Multiple Mediators}\\ 
+\item[] Department of Biostatistics, Harvard School of Public Health
+  \hfill Dec 2013 \\
+%-{\it Longitudinal causal mediation analysis for behavioral trials}\\ 
+\item[] Joint meeting of the IASC satellite conference for the 59th ISI WSC
+  \hfill Aug 2013\\
+ and the 8th conference of the ARS of the IASC, South Korea\\
+%-{\it Marginal structural models for causal effects of higher education rates on cancer mortalities}
+\end{innerlist}
+
+\halfblankline
+
+\textsc{Topic-Contributed Talks}
+\smallskip
+\begin{innerlist}
+\item[] 2026 Joint Statistical Meeting, Boston, MA
+  \hfill Aug 2026\\
+\item[] 2017 Joint Statistical Meeting, Baltimore, MD (Missed)
+  \hfill Aug 2017\\
+- Biometrics Section Award Presentation : {\it Bayesian Methods for Multiple Intermediate Variables: Principal Stratification and Causal Mediation Analysis}\\
+\item[] 2016 Joint Statistical Meeting, Chicago, IL
+  \hfill Aug 2016\\
+%-{\it Bayesian Semiparametric Latent Mediation Model}\\
+\item[] 2014 Joint Statistical Meeting, Boston, MA
+  \hfill Aug 2014\\
+%-{\it A Bayesian approach to the causal effect of multiple mediators with sensitivity analysis}
+\end{innerlist}
+
+
+\textsc{Contributed Talks}
+\smallskip
+\begin{innerlist}
+\item[] 10th World Congress in Probability and Statistics, Seoul (Virtual) \hfill Jul 2021\\
+\item[] 2017 ENAR Meeting, DC
+  \hfill Mar 2017\\
+%-{\it  Bayesian Latent Mediation Model}\\ 
+\item[] 2016 ENAR Meeting, Austin, TX
+  \hfill Mar 2016\\
+%-{\it  Bayesian Methods for Multiple Intermediate Variables}\\ 
+\item[] P01 retreat at Harvard Biostatistics
+  \hfill Oct 2015\\
+ % -{\it Bayesian Approach to Estimating the Causal Effect of Air Quality Regulations with Multiple Mediators}\\
+\item[] Bayesian Causal Inference Group Seminar at Harvard Biostatistics  \hfill Jun 2015\\
+%-{\it  Bayesian semiparametric latent mediation model}\\
+\item[] Bayesian Causal Inference Group Seminar at Harvard Biostatistics  \hfill Jan 2015\\
+%-{\it  Bayesian Causal Inference with Multiple Mediators}\\
+\item[] Bayesian Causal Inference Group Seminar at Harvard Biostatistics  \hfill Sep 2014\\
+%-{\it  Bayesian Longitudinal Mediation Analysis}\\
+\item[] Acid Rain Program Group Seminar at Harvard
+  \hfill Sep 2014, Feb 2015\\
+%-{\it  Causal Inference with Interference}\\
+\item[] 2015 ENAR Meeting, Miami, FL
+  \hfill Mar 2015\\
+%-{\it  Bayesian semiparametric latent mediation model}\\ 
+\item[] 2014 ENAR Meeting, Baltimore, MD
+  \hfill Mar 2014\\
+%-{\it Longitudinal causal mediation analysis for behavioral trials}\\ 
+\item[] 2013 Joint Statistical Meeting, Montreal, Canada
+  \hfill Aug 2013\\
+%-{\it Bayesian inference for longitudinal mediation analysis}
+\end{innerlist}
+
+\bigskip
+
+\textsc{Poster Presentations}
+\smallskip
+\begin{innerlist}
+\item[] 2015 International Health Policy Statistics Conference, Providence, RI
+  \hfill Oct 2015\\
+%-{\it The public health impact of air quality regulations through change in ambient PM2.5}\\ 
+\item[] 2015 Atlantic Causal Inference Conference, Philadelphia, PA
+  \hfill May 2015\\
+%-{\it Bayesian semiparametric latent mediation model}\\ 
+\item[] 2013 Atlantic Causal Inference Conference, Boston, MA
+  \hfill May 2013\\
+%-{\it Bayesian inference for longitudinal mediation analysis}\\ 
+\item[] 2012 SRCOS Summer Research Conference, GA
+  \hfill Jun 2012\\
+%-{\it A Bayesian approach to the causal effect of multiple mediators}\\ 
+\item[] 2012 Atlantic Causal Inference Conference, Baltimore, MD
+  \hfill May 2012\\
+%-{\it A Bayesian approach to the causal effect of multiple mediators}\\ 
+\item[] Workshop on Causal Inference and Graphical Models,
+  \hfill Jan 2012\\
+ Winter Workshop 2012, University of Florida\\
+%-{\it Bayesian inference for the causal effect of mediation with baseline covariates}\\ 
+\item[] NSF Research Day, University of Florida
+  \hfill Oct 2011\\
+%-{\it Bayesian inference for the causal effect of mediation with baseline covariates}\\ 
+\item[] Workshop on Causal Inference in Health Research, 
+  \hfill May 2011\\
+CRM, University of Montreal, Canada\\
+%-{\it Bayesian inference for the causal effect of mediation with baseline covariates}
+\end{innerlist}
+
+
+\section{Professional Service}
+\textsc{Editorial Board}
+\smallskip
+\begin{innerlist}
+\item[] Co-Editor (CSAM, 2025 - ) / Associate Editor (CSAM, 2023 - 2025)
+\end{innerlist}
+\medskip
+\textsc{Reviewer } (\href{https://publons.com/researcher/1597385/chanmin-kim/}{Publons})
+\smallskip
+\begin{innerlist}
+\item[] {\it Journal of American Statistical Association (theory and methods; applications and case studies), Biometrics, Statistics
+    in Medicine, Bayesian Analysis, Journal of Royal Statistical Society: Series B, Journal of Royal Statistical Society: Series C, Journal of Causal Inference, Statistica Sinica, Annals of Applied Statistics, Biostatistics, Statistical Science, Epidemiologic Methods, BMJ Open, BMC Medical Research Methodology, Computational Statistics and Data Analysis, The Canadian Journal of Statistics, Journal of Agricultural Biological and Environmental Statistics, BMC Public Health, WIREs Computational Statistics, The International Journal of Biostatistics, Statistical Methods and Applications, The Korean Journal of Applied Statistics, Scientific Reports, MRC grant proposal, HEI grant proposal, Structural Equation Modeling: A Multidisciplinary Journal, Statistical Methods in Medical Research, Journal of Statistical Computation and Simulation, Statistical Science} 
+\end{innerlist}
+
+\medskip
+
+\textsc{Professional Society}
+\smallskip
+\begin{innerlist}
+\item[] Elected Member of ENAR Council for Emerging and New
+  Statisticians.  \hfill{2014 - 2016}
+\item[] Members of ENAR, ASA, ISBA
+\end{innerlist}
+
+
+\medskip
+
+\textsc{Conference Organization}
+\smallskip
+\begin{innerlist}
+\item[] {\bf Session Organizer} : Invited Session at EcoSta (2025), Invited Session at CMStatistics (2021, 2022), Invited Session at KDISS (2022), Invited Session at  2021 Fall Conference of KSS, Invited Session at ENAR (2019), Invited Session at JSM (2018), Invited Session at ACIC (2018), Topic-contributed sessions at JSM (2016, 2017) 
+\item[] {\bf Session Chair} : Invited Session at EcoSta (2025), CMStatistics (2011, 2022), KDISS (2022), KSS(2021), ENAR (2015), JSM (2016), Invited Session at ENAR (2020)
+\item[] Others: Judge of 2014 ENAR spring meeting RAB poster competition. 
+\end{innerlist}
+
+\section{Departmental Service}
+
+\textsc{PhD Students}
+\smallskip
+\begin{innerlist}
+\item[] Youngho Bae (SKKU), Winter 2025
+\begin{innerlist}
+\item[] Awarded the best poster award at 3rd World Conference on Data Science and Statistics, Netherlands
+\item[] Currently, postdoc at SKKU.
+\end{innerlist}
+\item[] Hyunji Lee (SKKU), expected Spring 2030
+\end{innerlist}
+
+\medskip
+\textsc{MS Students}
+\smallskip
+\begin{innerlist}
+\item[] Youngho Bae (SKKU), Winter 2021
+\begin{innerlist}
+\item[] Awarded a poster award (2nd prize) at 2021 Spring Conference of KDISS.
+\end{innerlist}
+\item[] Doyoung Kim (SKKU), Spring 2022
+\begin{innerlist}
+\item[] Awarded the best poster award (1st prize) at 2021 Spring Conference of KDISS and an honorable mention for the poster award at 2021 Spring Conference of KSS.
+\item[] Currently, Ph.D. student in the Dept. of Statistics at Florida State Univ.
+\end{innerlist}
+\item[] Sangho Park (SKKU), Winter 2021
+\begin{innerlist}
+\item[] Currently at Samsung Medical Center.
+\end{innerlist}
+\item[] Yeonghoon Yoo (SKKU), Spring 2022
+\begin{innerlist}
+\item[] Currently at Concentrix.
+\end{innerlist}
+\item[] Hyunwoo Lim (SKKU), Spring 2022
+\begin{innerlist}
+\item[] Currently at Seoul Guarantee Insurance Company.
+\end{innerlist}
+\item[] Nayeon Kwon (SKKU), Winter 2022
+\begin{innerlist}
+\item[] Awarded a poster award (2nd prize) at 2022 Winter Conference of KDISS.
+\end{innerlist}
+\item[] Sanghyun Lee (SKKU), Winter 2022
+\begin{innerlist}
+\item[] Currently working for the Korean goverment.
+\end{innerlist}
+\item[] Jaehyun Seo (SKKU), Winter 2022
+\begin{innerlist}
+\item[] Awarded an honorable mention for the poster award at 2022 Spring Conference of KSS.
+\item[] Currently at Neople
+\end{innerlist}
+\item[] Jaeho Yoon (SKKU), Spring 2023
+\begin{innerlist}
+\item[] Formally, Ph.D. student at Univ. of Georgia.
+\end{innerlist}
+\item[] Namtaek Kwon (SKKU), Spring 2023
+\begin{innerlist}
+\item[] Currently, at Netmarble.
+\end{innerlist}
+\item[] Yeseul Sung (SKKU), Winter 2023
+\item[] Eunju Sim (SKKU), Winter 2023
+\begin{innerlist}
+\item[] Currently at DB Insurance.
+\end{innerlist}
+\item[] Juwon Jung (SKKU), Winter 2023
+\begin{innerlist}
+\item[] Currently, a PhD student at Korea University.
+\end{innerlist}
+\item[] Heechul Jeong (SKKU), expected Spring 2024
+\begin{innerlist}
+\item[] Currently at SBI Savings Bank.
+\end{innerlist}
+\item[] Jin Lee (SKKU), Winter 2024
+\item[] Sun Min Yi (SKKU), Winter 2024
+\begin{innerlist}
+\item[] Currently at NICE Information Service
+\end{innerlist}
+\item[] Jisung Park (SKKU), Winter 2024
+\begin{innerlist}
+\item[] Currently at Samsung Electronics DS division
+\end{innerlist}
+\item[] Jungeun Lee (SKKU), Spring 2025
+\item[] Seokho Kim (SKKU), expected Winter 2025
+\begin{innerlist}
+\item[] Awarded the paper award (3rd prize) at 2025 Summer Conference of KSS.
+\end{innerlist}
+\item[] Hyunwoo Kim (SKKU), expected Winter 2025
+\item[] Joohyung Son (SKKU), expected Winter 2025
+\item[] Hyunbin Kim (SKKU), expected Spring 2026
+\item[] Taesoo Kim (SKKU), expected Spring 2026
+\item[] Yerim Park (SKKU), expected Spring 2026
+\item[] I-Heon Jung (SKKU), expected Spring 2026
+\item[] Doun Jeon (SKKU), expected Spring 2026
+\item[] Jisu Kang (SKKU), expected Winter 2026
+\item[] Jin Seop Hyun (SKKU), expected Winter 2026
+\item[] Yoonji Bang (SKKU), expected Spring 2027
+\item[] Yeeun Jun (SKKU), expected Spring 2027
+\end{innerlist}
+\medskip
+
+\textsc{PhD Committees}
+\smallskip
+\begin{innerlist}
+\item[] Kevin Cummiskey (Harvard Biostatistics, 2018). Advisor: Corwin M. Zigler
+\item[] Aya Mitani (Boston Univ. Biostatistics, 2019). Advisor: Kerrie Nelson
+\item[] Komal Basra (Boston Univ. Environmental Health, 2021). Advisor: Patricia Fabian
+\item[] Daniel Nguyen (Boston Univ. Environmental Health, 2022). Advisor: Junenette Peters
+\item[] Xiaoyan Liu (Boston Univ. Biostatistics, 2022). Advisor: Gheorghe Doros
+\item[] Song Yang (Boston Univ. Biostatistics, 2025). Advisor: Gheorghe Doros
+\end{innerlist}
+\medskip
+
+\textsc{MS Committees}
+\smallskip
+\begin{innerlist}
+\item[] Amelia Williams (Boston University Epidemiology, 2018). Advisor: Kimberly Shea
+\end{innerlist}
+\medskip
+
+
+\textsc{Qual Examiner}
+\smallskip
+\begin{innerlist}
+\item[] Chloe Kim (Boston University Environmental Health). Advisor: Michael McClean
+\item[] Komal Basra (Boston University Environmental Health, 2019). Advisor: Patricia Fabian
+\end{innerlist}
+\medskip
+
+\textsc{Other Services}
+\smallskip
+\begin{innerlist}
+\item[] Co-Organizer, Epidemiology+Biostatistics Joint Seminar Series, Boston University  \hfill{2018}
+\item[] Co-Organizer, Seminar Series, Department of Biostatistics, Boston University  \hfill{2017 - 2019}
+\item[] Co-Chair, Course Development Task Force (Topics in Causal Inference), Department of Biostatistics, Boston University \hfill{2018 - 2019}
+\item[] Convener, PhD Program Review Committee, Department of Biostatistics, Boston University \hfill{2018}
+\item[] Faculty Search Committee, Department of Biostatistics, Boston University \hfill{2018 - 2019}
+\item[] Co-Organizer, Causal Inference Seminar Series, Departments of Biostatistics + Mathematics and Statistics, Boston University \hfill{2018-}
+\item[] Biostatistics Program Advisory Committee (BPAC), Departments of Biostatistics, Boston University \hfill{2019-}
+\item[] MA/PhD Admission Committee, Departments of Biostatistics, Boston University \hfill{2019-}
+\end{innerlist}
+\medskip
+
+
+\section{Teaching Experience}
+
+\textsc{Instructor} 
+\begin{innerlist}
+\item[] STA3041 - Intro. to Spatial Statistics (Undergrad) \hfill {Fall 2025}\\
+        Department of Statistics, SungKyunKwan University\\
+\item[] STA3010 - Intro. to Nonparametric Statistics (Undergrad) \hfill {Fall 2022, 2024, 2025}\\
+        Department of Statistics, SungKyunKwan University\\
+\item[] STA5041 - Topics in Bayesian Methods (Grad) \hfill {Fall 2022, 2025}\\
+        Department of Statistics, SungKyunKwan University\\
+\item[] STA3034 - Massive Data Analysis and Visualization (Undergrad) \hfill {Spring 2021, Fall 2023}\\
+        Department of Statistics, SungKyunKwan University\\
+\item[] STA2016 - Intro. to Statistical Programming (Undergrad) \hfill {Fall 2020, Fall 2021, Spring 2022, Spring 2023, Spring 2024, Fall 2024, Spring 2025}\\
+        Department of Statistics, SungKyunKwan University\\
+\item[] STA5004 - Advanced Categorical Data Analysis (Grad) \hfill {Fall 2020, Fall 2021}\\
+        Department of Statistics, SungKyunKwan University\\
+\item[] STA5030 - Bayesian Statistics (Grad) \hfill {Spring 2020, Spring 2021, Fall 2023}\\
+        Department of Statistics, SungKyunKwan University\\
+\item[] STA5039 - Causal Inference (Grad) \hfill {Spring 2022, Spring 2023, Spring 2024}\\
+	Department of Statistics, SungKyunKwan University\\
+\item[] BS730 - Introduction to Statistical Computing \hfill {Spring 2018, Spring 2019}\\ 
+        Teaching core statistical concepts and computing skills with R\\
+        Department of Biostatistics, Boston University\\
+\item[] BS901 - Directed Studies in Biostatistics \hfill {Summer 2019}\\
+	Analyzing datasets using nonparametric methods\\
+	Department of Biostatistics, Boston University\\
+\end{innerlist}
+
+\textsc{Postdoc Mentor} \hfill {Summer 2017}
+\begin{innerlist}
+\item[] 6 weeks mentoring of summer project participants (Pipelines into Biostatistics)\\
+Department of Biostatistics,  Harvard T. H. Chan School of Public Health\\
+\end{innerlist}
+
+
+\textsc{Postdoc Mentor} \hfill {Summer 2016}
+\begin{innerlist}
+\item[] 6 weeks mentoring of summer project participants (Pipelines into Biostatistics)\\
+Department of Biostatistics,  Harvard T. H. Chan School of Public Health\\
+\end{innerlist}
+
+\textsc{Guest Lecturer} \hfill {Fall 2018, Spring 2019, Fall 2019}
+\begin{innerlist}
+\item[] Causal Mediation Analysis (3 hours) in BS852
+  (Bayesian Methodology in Biostatistics)\\
+        Department of Biostatistics, Boston University School of Public Health\\
+\end{innerlist}
+
+
+\textsc{Guest Lecturer} \hfill {Fall 2014}
+\begin{innerlist}
+\item[] Causal Mediation Analysis (2 hours) in BIO 249
+  (Bayesian Methodology in Biostatistics)\\
+        Department of Biostatistics, Harvard T. H. Chan School of Public Health\\
+\end{innerlist}
+
+
+\textsc{Guest Lecturer} \hfill {Spring, Fall 2013}
+\begin{innerlist}
+\item[]  2 hour BUGS tutorial in the course SSC 384.7 (spring)\\
+	1 hour BUGS tutoral in the course SSC 383C (Fall)\\
+        Division of Statistics and Scientific Computation, The University of Texas at Austin\\
+\end{innerlist}
+
+\textsc{Lab-Instructor} \hfill {Fall 2008, Spring 2009}
+\begin{innerlist}
+\item[] STA 2023 - Introduction to Statistics\\
+        Teaching lab sessions of the course 3 hours a week\\
+	Evaluation: 4.31/5 (Spring 2009), 4.38/5, 4.26/5, 4.35/5 (Fall 2008)\\
+        Department of Statistics, University of Florida\\
+\end{innerlist}
+
+\textsc{Teaching Assistant at UF} \hfill {Spring, Fall 2009}
+\begin{innerlist}
+
+\item[] STA 3032 - Engineering Statistics\\
+        STA 4210 - Regression Analysis\\
+        STA 4183 - Theory of Interest\\
+        ESI 6546 - Stochastic Modeling and Analysis (Grader)\\
+\end{innerlist}
+
+\textsc{Teaching Assistant at Columbia University} \hfill {Spring 2007}
+\begin{innerlist}
+
+\item[] W1211 - Introduction to Statistics (with Calculus)
+\end{innerlist}
+
+
+
+
+
+\section{Grant Funding}
+\textsc{Active}
+\smallskip
+\begin{innerlist}
+\item[] NRF mid-career research  (PI: Chanmin Kim) \hfill{Mar 2025 - Feb 2029} \\
+Development of integrated data science methodologies based on disease stage for medical big data analysis \\
+Role: {\bf Principal investigator} \hfill {555,423,000 won}\\
+\item[] NRF basic research lab (PI: Keunbaik Lee) \hfill{Aug 2024 - Apr 2027} \\
+Development of integrated data science methodologies based on disease stage for medical big data analysis \\
+Role: {\bf Co-investigator} \hfill {1,375,000,000 won}\\
+
+\end{innerlist}
+\textsc{Completed}
+\smallskip
+\begin{innerlist}
+\item[] NRF basic research(PI: Chanmin Kim) \quad\qquad\qquad \hfill{Jun 2022 - Feb 2025}\\
+ Bayesian non-parametric method for longitudinal causal mechanism analysis.\\ 
+Role: {\bf Principal Investigator} \hfill {210,000,000 won}\\
+\item[] NRF basic research (PI: Chanmin Kim) \quad\qquad\qquad \hfill{Jun 2020 - Feb 2023}\\
+ Bayesian non-parametric methods for estimating causal effect heterogeneity.\\ 
+Role: {\bf Principal Investigator} \hfill {170,000,000 won}\\
+\item[] Sungkyun Research Fund (PI: Chanmin Kim) \quad\qquad\qquad \hfill{Dec 2021 - Dec 2022}\\
+ Heterogeneous Mediation Analysis for High-dimensional Confounders and
+Mediators.\\ 
+Role: {\bf Principal Investigator} \hfill{13,000,000 won}\\
+\item[] US-EPA (PI: Corwin Zigler) \quad\qquad\qquad \hfill{Sep 2016 - Aug 2020}\\
+ Air Climate and Energy Center:  Regional Air Pollution Mixtures:  The Past and Future Impacts of Emission Controls and Climate Change on AirQuality and Health, Project 4: A Causal Inference Framework to Support Policy Decisions by Evaluating the Effectiveness of Past Air Pollution Control Strategies for the Entire United States.\\ 
+Role: {\bf PI on subcontract}, subcontract from Harvard University\\
+\item[] NIH (PI: Kerrie Nelson) \quad\qquad\qquad \hfill{Feb 2018 - Aug 2022}\\
+Improving Accuracy and Reliability in Cancer Screening Tests\\
+Role: {\bf Biostatistician}\\
+\item[] NIH (PI: David Sherr) \quad\qquad\qquad \hfill{Sep 2012 - Aug 2020}\\
+Superfund Research Program at Boston University\\
+Role: {\bf Biostatistician}\\
+\item[] NIH (PI: Lauren Wise and Elizabeth Hatch) \quad\qquad\qquad \hfill{Jan 2019 - Oct 2023}\\
+A Preconception Cohort Study of Environmental Chemicals, Fertility, and Miscarriage\\
+Role: {\bf Biostatistician}\\
+\item[] NIH (PI: Debbie Cheng) \quad\qquad\qquad \hfill{Sep 2016 - Aug 2021}\\
+Biostatistics and Data Management (BDM) Core - URBAN ARCH Consortium \\
+Role: {\bf Biostatistician}\\
+\item[] NIH (PI: Jason Roy) \quad\qquad\qquad \hfill{Sep 2014 - Aug 2018}\\
+Non-Parametric Bayesian Methods of Causal Inference.\\ 
+Role: {\bf PI on subcontract}, subcontract from University of Pennsylvania\\
+\item[] NIH (PI: Corwin Zigler) \qquad\qquad  \hfill{Sep 2015
+  - Aug 2020}\\
+Causal Inference with Interference for Evaluating Air Quality
+Policies\\
+Role: {\bf Investigator}\\
+\item[] NIH (PI: Kerrie Nelson) \quad\qquad\qquad \hfill{Jan 2014 - Dec 2019}\\
+Modeling Agreement in Cancer Diagnostic Tests\\
+Role: {\bf Biostatistician}\\
+\end{innerlist}
+
+\section{Project}
+\textsc{Active}
+\smallskip
+\begin{innerlist}
+\item[] Hyundai Motor Company \quad\qquad\qquad \hfill{Mar 2026 - }\\
+Bayesian methods for RLDA data\\ 
+Role: {\bf Project Manager} \\
+\end{innerlist}
+\textsc{Completed}
+\smallskip
+\begin{innerlist}
+\item[] Doosan Enerbility \quad\qquad\qquad \hfill{May 2025 - Nov 2025}\\
+Bayesian causal methods development for Doosan Enerbility's SLM\\ 
+Role: {\bf Project Manager} \\
+\item[] Doosan Enerbility \quad\qquad\qquad \hfill{Apr 2024 - Dec 2024}\\
+Bayesian causal methods development for Doosan Enerbility's wind power business\\ 
+Role: {\bf Project Manager} \\
+\end{innerlist}
+
+\section{Computing}
+\smallskip
+\textsc{Statistical Programs (Packages)}
+\begin{innerlist}
+    \item[] R, SAS, Stan, BUGS (WinBUGS, OpenBUGS), MATLAB\\
+      - SAS Certified Base Programmer for SAS 9 Credential \hfill{May 2012}\\
+      - SAS Certified Advanced Programmer for SAS 9 Credential \hfill{Sep 2012}\\
+\end{innerlist}
+
+\textsc{Programming Languages}
+\smallskip
+\begin{innerlist}
+    \item[] C++,  Python\\
+\end{innerlist}
+
+\textsc{Operating System}
+\begin{innerlist}
+    \item[] Unix, Linux, Windows\\
+\end{innerlist}
+
+
+\section{Miscellaneous}
+Exam P pass, Society of Actuaries \hfill{Mar 2011}
+
+
+%\section{References}
+
+%Corwin Zigler
+%\begin{innerlist}
+%\item[] Associate Professor \hfill {Phone: 617-432-5014}\\
+%Department of Biostatistics \hfill{E-mail: czigler@hsph.harvard.edu}\\
+%Harvard T. H. Chan School of Public Health\end{innerlist}
+
+%\halfblankline
+
+
+%Michael Daniels
+%\begin{innerlist}
+%\item[] Professor and Chair \hfill {Phone: 352-262-9892}\\
+%Andrew Banks Family Endowed Chair \hfill{E-mail: daniels@ufl.edu}\\
+%Department of Statistics\\
+%University of Florida
+%\end{innerlist}
+%\halfblankline
+
+%Jason Roy
+%\begin{innerlist}
+%\item[] Professor of Biostatistics \hfill {Phone: 732-235-9168}\\
+%Chair of Biostatistics and Epidemiology\hfill{E-mail: jason.roy@rutgers.edu}\\
+%Co-Director, Center for Causal Inferece\\
+%Rutgers School of Public Health
+%\end{innerlist}
+
+
+
+%\section{Hardware and Software Skills}
+\begin{comment}
+Computer Programming:
+%
+\begin{innerlist}
+    \item C, C$+$$+$, Java, JavaScript, NetLogo, Pascal, Perl, PHP,
+        Lisp, UNIX shell scripting (including POSIX.2), GNU make,
+        AppleScript, SQL, MySQL, \Matlab, Maple, Mathematica, and others
+\end{innerlist}
+
+\halfblankline
+\end{comment}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% End CV Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------%
+% The following is copyright and licensing information for
+% redistribution of this LaTeX source code; it also includes a liability
+% statement. If this source code is not being redistributed to others,
+% it may be omitted. It has no effect on the function of the above code.
+%----------------------------------------------------------------------%
+% Copyright (c) 2007, 2008, 2009, 2010, 2011 by Theodore P. Pavlic
+%
+% Unless otherwise expressly stated, this work is licensed under the
+% Creative Commons Attribution-Noncommercial 3.0 United States License. To
+% view a copy of this license, visit
+% http://creativecommons.org/licenses/by-nc/3.0/us/ or send a letter to
+% Creative Commons, 171 Second Street, Suite 300, San Francisco,
+% California, 94105, USA.
+%
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+% OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+% IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+% CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+% TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+% SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%----------------------------------------------------------------------%
